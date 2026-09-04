@@ -1,0 +1,544 @@
+{
+  "loginMethod": "scan",
+  "cookies": [
+    {
+      "name": "wr_fp",
+      "value": "2941862945"
+    },
+    {
+      "name": "wr_skey",
+      "value": "_G9vI2ij"
+    },
+    {
+      "name": "wr_vid",
+      "value": "391790941"
+    },
+    {
+      "name": "wr_ql",
+      "value": "0"
+    },
+    {
+      "name": "wr_rt",
+      "value": "web@oP18MXCvtuyDITZdPPV_AL"
+    },
+    {
+      "name": "wr_gid",
+      "value": "239827233"
+    }
+  ],
+  "noteLocation": "books read/笔记",
+  "dailyNotesLocation": "/",
+  "insertAfter": "<!-- start of weread -->",
+  "insertBefore": "<!-- end of weread -->",
+  "dailyNotesFormat": "YYYY-MM-DD",
+  "lastCookieTime": 1788498312655,
+  "isCookieValid": true,
+  "user": "",
+  "userVid": "391790941",
+  "userAvatar": "",
+  "userSignature": "",
+  "template": "",
+  "noteCountLimit": -1,
+  "subFolderType": "-1",
+  "fileNameType": "BOOK_NAME",
+  "removeParens": true,
+  "removeParensWhitelist": "",
+  "filterInlineImages": false,
+  "dailyNotesToggle": false,
+  "notesBlacklist": "",
+  "notesWhitelist": "",
+  "syncMode": "blacklist",
+  "showEmptyChapterTitleToggle": true,
+  "convertTags": true,
+  "saveArticleToggle": false,
+  "saveReadingInfoToggle": true,
+  "syncPopularHighlightsToggle": true,
+  "readingOpenMode": "TAB",
+  "bookOpenMode": "web",
+  "trimBlocks": false,
+  "cookieCloudInfo": {
+    "serverUrl": "",
+    "uuid": "",
+    "password": ""
+  },
+  "cookieAutoRefreshToggle": false,
+  "cookieRefreshInterval": 12,
+  "scheduledSyncToggle": false,
+  "scheduledSyncInterval": 35,
+  "lastSyncTime": 1788436370542,
+  "lastSyncBookCount": 17,
+  "lastSyncBookTitles": [],
+  "syncLogs": [
+    {
+      "id": "sync-1788436338604",
+      "timestamp": 1788436338604,
+      "totalBooks": 17,
+      "syncedBooks": 17,
+      "skippedBooks": 0,
+      "duration": 31.938,
+      "notes": [
+        {
+          "bookId": "3300224526",
+          "title": "雨的历史",
+          "filePath": "books read/笔记/雨的历史.md"
+        },
+        {
+          "bookId": "30212113",
+          "title": "那不勒斯四部曲",
+          "filePath": "books read/笔记/那不勒斯四部曲.md"
+        },
+        {
+          "bookId": "3300042999",
+          "title": "你的夏天还好吗？",
+          "filePath": "books read/笔记/你的夏天还好吗？.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "3300067776",
+          "title": "明亮的夜晚",
+          "filePath": "books read/笔记/明亮的夜晚.md"
+        },
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1788435975179",
+      "timestamp": 1788435975179,
+      "totalBooks": 17,
+      "syncedBooks": 17,
+      "skippedBooks": 0,
+      "duration": 10.853,
+      "notes": [
+        {
+          "bookId": "3300224526",
+          "title": "雨的历史",
+          "filePath": "books read/笔记/雨的历史.md"
+        },
+        {
+          "bookId": "30212113",
+          "title": "那不勒斯四部曲",
+          "filePath": "books read/笔记/那不勒斯四部曲.md"
+        },
+        {
+          "bookId": "3300042999",
+          "title": "你的夏天还好吗？",
+          "filePath": "books read/笔记/你的夏天还好吗？.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "3300067776",
+          "title": "明亮的夜晚",
+          "filePath": "books read/笔记/明亮的夜晚.md"
+        },
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1787559824251",
+      "timestamp": 1787559824251,
+      "totalBooks": 14,
+      "syncedBooks": 14,
+      "skippedBooks": 0,
+      "duration": 9.376,
+      "notes": [
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300067776",
+          "title": "明亮的夜晚",
+          "filePath": "books read/笔记/明亮的夜晚.md"
+        },
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1787556540685",
+      "timestamp": 1787556540685,
+      "totalBooks": 14,
+      "syncedBooks": 14,
+      "skippedBooks": 0,
+      "duration": 9.018,
+      "notes": [
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300067776",
+          "title": "明亮的夜晚",
+          "filePath": "books read/笔记/明亮的夜晚.md"
+        },
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1787030115954",
+      "timestamp": 1787030115954,
+      "totalBooks": 13,
+      "syncedBooks": 13,
+      "skippedBooks": 0,
+      "duration": 8.183,
+      "notes": [
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1787028015954",
+      "timestamp": 1787028015954,
+      "totalBooks": 13,
+      "syncedBooks": 13,
+      "skippedBooks": 0,
+      "duration": 8.591,
+      "notes": [
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1787025915966",
+      "timestamp": 1787025915966,
+      "totalBooks": 13,
+      "syncedBooks": 13,
+      "skippedBooks": 0,
+      "duration": 8.657,
+      "notes": [
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1787023815955",
+      "timestamp": 1787023815955,
+      "totalBooks": 13,
+      "syncedBooks": 13,
+      "skippedBooks": 0,
+      "duration": 8.139,
+      "notes": [
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1787021715955",
+      "timestamp": 1787021715955,
+      "totalBooks": 13,
+      "syncedBooks": 13,
+      "skippedBooks": 0,
+      "duration": 8.857,
+      "notes": [
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1787019616247",
+      "timestamp": 1787019616247,
+      "totalBooks": 13,
+      "syncedBooks": 13,
+      "skippedBooks": 0,
+      "duration": 8.746,
+      "notes": [
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    }
+  ],
+  "bookshelfSortMode": "recent",
+  "bookshelfGroupByYear": false,
+  "bookshelfDefaultSyncStatusFilter": "all",
+  "themes": [
+    {
+      "id": "builtin_merged",
+      "name": "合并式模板",
+      "description": "划线和想法 inline 展示，适合快速回顾",
+      "template": "---\nisbn: {{ metaData.isbn }}\nlastReadDate: {{ metaData.lastReadDate }}\n---\n# 元数据\n> [!abstract] {{ metaData.title }}\n> - ![ {{ metaData.title }}|200]({{ metaData.cover }})\n> - 书名： {{ metaData.title }}\n> - 作者： {{ metaData.author }}\n> - 简介： {% set intro = metaData.intro | replace(\"\\n\",\"\") | replace(\"\\r\",\"\") %}{{ intro }}\n> - 出版时间： {{ metaData.publishTime }}\n> - ISBN： {{ metaData.isbn }}\n> - 字数： {{ metaData.totalWords }}\n> - 分类： {{ metaData.category }}\n> - 出版社： {{ metaData.publisher }}\n> - PC地址：{{ metaData.pcUrl }}\n\n# 高亮划线\n{% if syncPopularHighlightsToggle %}\n{% for chapter in chapterHighlights %}\n{% if chapter.level == 1 %}\n## {{ chapter.chapterTitle }}\n{% elif chapter.level == 2 %}\n### {{ chapter.chapterTitle }}\n{% elif chapter.level == 3 %}\n#### {{ chapter.chapterTitle }}\n{% endif %}\n{% for highlight in chapter.highlights %}\n{% set rangeParts = highlight.range | split(\"-\") %}\n{% set deeplink = \"weread://bestbookmark?bookId=\" + metaData.bookId + \"&chapterUid=\" + highlight.chapterUid + \"&rangeStart=\" + rangeParts[0] + \"&rangeEnd=\" + rangeParts[1] %}\n{% if highlight.isPopular and highlight.isUserHighlight %}\n{# 用户自己的划线 + 热门：📌🔥 + 共读人数 #}\n{% if highlight.reviewContent %}\n> 📌🔥 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> 🔥 {{ highlight.popularCount }} 人共读\n> 💭 {{ highlight.reviewContent }} \n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n{% else %}\n> 📌🔥 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> 🔥 {{ highlight.popularCount }} 人共读\n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n\n{% endif %}\n{% elif highlight.isPopular %}\n{# 只有热门划线（非用户）：🔥 + 共读人数 #}\n> 🔥 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> 📊 {{ highlight.popularCount }} 人共读 ^{{ highlight.bookmarkId }}\n\n{% else %}\n{# 普通用户划线（非热门）：📌 #}\n{% if highlight.reviewContent %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> 💭 {{ highlight.reviewContent }} \n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n{% else %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n\n{% endif %}\n{% endif %}\n{% endfor %}\n{% endfor %}\n{% else %}\n{% for chapter in chapterHighlights %}\n{% if chapter.level == 1 %}\n## {{ chapter.chapterTitle }}\n{% elif chapter.level == 2 %}\n### {{ chapter.chapterTitle }}\n{% elif chapter.level == 3 %}\n#### {{ chapter.chapterTitle }}\n{% endif %}\n{% for highlight in chapter.highlights %}\n{% set rangeParts = highlight.range | split(\"-\") %}\n{% set deeplink = \"weread://bestbookmark?bookId=\" + metaData.bookId + \"&chapterUid=\" + highlight.chapterUid + \"&rangeStart=\" + rangeParts[0] + \"&rangeEnd=\" + rangeParts[1] %}\n{# 普通用户划线（不显示热门）：📌 #}\n{% if highlight.reviewContent %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n 💭 {{ highlight.reviewContent }} \n ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n{% else %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n\n{% endif %}\n{% endfor %}\n{% endfor %}\n{% endif %}\n\n# 读书笔记\n{% for chapter in bookReview.chapterReviews %}\n{% if chapter.reviews or chapter.chapterReview %}\n## {{ chapter.chapterTitle }}\n{% if chapter.chapterReviews %}\n{% for chapterReview in chapter.chapterReviews %}\n### 章节评论 No.{{ loop.index }}\n- {{ chapterReview.content }} ^{{ chapterReview.reviewId }}\n    - ⏱ {{ chapterReview.createTime }}\n{% endfor %}\n{% endif %}\n{% if chapter.reviews %}\n{% for review in chapter.reviews %}\n### 划线评论\n> 📌 {{ review.abstract | trim }} ^{{ review.reviewId }}\n    💭 {{ review.content }}\n    ⏱ {{ review.createTime }}\n{% endfor %}\n{% endif %}\n{% endif %}\n{% endfor %}\n\n# 本书评论\n{% if bookReview.bookReviews %}\n{% for bookReview in bookReview.bookReviews %}\n## 书评 No.{{ loop.index }}\n{{ bookReview.mdContent }} ^{{ bookReview.reviewId }}\n⏱ {{ bookReview.createTime }}\n{% endfor %}\n{% endif %}\n",
+      "trimBlocks": true,
+      "isBuiltIn": true,
+      "isReadOnly": true,
+      "source": "builtin"
+    },
+    {
+      "id": "builtin_separated",
+      "name": "分离式模板",
+      "description": "先展示纯划线，笔记统一在底部，适合整理归纳",
+      "template": "---\nisbn: {{ metaData.isbn }}\nlastReadDate: {{ metaData.lastReadDate }}\n---\n# 元数据\n> [!abstract] {{ metaData.title }}\n> - ![ {{ metaData.title }}|200]({{ metaData.cover }})\n> - 书名： {{ metaData.title }}\n> - 作者： {{ metaData.author }}\n> - 简介： {% set intro = metaData.intro | replace(\"\\n\",\"\") | replace(\"\\r\",\"\") %}{{ intro }}\n> - 出版时间： {{ metaData.publishTime }}\n> - ISBN： {{ metaData.isbn }}\n> - 字数： {{ metaData.totalWords }}\n> - 分类： {{ metaData.category }}\n> - 出版社： {{ metaData.publisher }}\n> - PC地址：{{ metaData.pcUrl }}\n\n# 高亮划线\n{% for chapter in chapterHighlights %}\n{% if chapter.level == 1 %}\n## {{ chapter.chapterTitle }}\n{% elif chapter.level == 2 %}\n### {{ chapter.chapterTitle }}\n{% elif chapter.level == 3 %}\n#### {{ chapter.chapterTitle }}\n{% endif %}\n{% for highlight in chapter.highlights %}\n{% set rangeParts = highlight.range | split(\"-\") %}\n{% set deeplink = \"weread://bestbookmark?bookId=\" + metaData.bookId + \"&chapterUid=\" + highlight.chapterUid + \"&rangeStart=\" + rangeParts[0] + \"&rangeEnd=\" + rangeParts[1] %}\n{% if syncPopularHighlightsToggle and highlight.isPopular %}\n> 📌🔥 [{{ highlight.markText | trim }}](<{{ deeplink }}>)  \n> 🔥 {{ highlight.popularCount }} 人共读 ^{{ highlight.bookmarkId }}\n\n{% else %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)   ^{{ highlight.bookmarkId }}\n\n{% endif %}\n{% endfor %}\n{% endfor %}\n\n# 笔记汇总\n{% for chapter in chapterHighlights %}\n{% for highlight in chapter.highlights %}\n{% if highlight.reviewContent %}\n## {{ chapter.chapterTitle }} 的想法\n{{ highlight.reviewContent }}\n> 📌 {{ highlight.markText | trim }}\n\n{% endif %}\n{% endfor %}\n{% endfor %}\n\n{% if bookReview.bookReviews %}\n{% for bookReview in bookReview.bookReviews %}\n# 书评\n\n{{ bookReview.mdContent }}\n{{ bookReview.createTime }}\n{% endfor %}\n{% endif %}\n",
+      "trimBlocks": true,
+      "isBuiltIn": true,
+      "isReadOnly": true,
+      "source": "builtin"
+    },
+    {
+      "id": "builtin_official",
+      "name": "微信官方笔记主题",
+      "description": "详细的元数据信息，适合生成书籍笔记",
+      "template": "---\nisbn: {{ metaData.isbn }}\nlastReadDate: {{ metaData.lastReadDate }}\n---\n《{{ metaData.title }}》\n{{ metaData.author }}\n{{ metaData.totalWords }}字\n{{ metaData.noteCount }}个笔记\n\n{% if bookReview.bookReviews %}\n{% for bookReview in bookReview.bookReviews %}\n◆ 点评\n{{ bookReview.createTime }}\n{{ bookReview.mdContent }}\n{% endfor %}\n{% endif %}\n\n{% for chapter in chapterHighlights %}\n{% if chapter.level == 1 %}\n## ◆ {{ chapter.chapterTitle }}\n{% elif chapter.level == 2 %}\n### ◆ {{ chapter.chapterTitle }}\n{% elif chapter.level == 3 %}\n#### ◆ {{ chapter.chapterTitle }}\n{% endif %}\n{% for highlight in chapter.highlights %}\n{% set rangeParts = highlight.range | split(\"-\") %}\n{% set deeplink = \"weread://bestbookmark?bookId=\" + metaData.bookId + \"&chapterUid=\" + highlight.chapterUid + \"&rangeStart=\" + rangeParts[0] + \"&rangeEnd=\" + rangeParts[1] %}\n{% if highlight.reviewContent %}\n\n{{ highlight.createTime }} 发表想法\n{{ highlight.reviewContent }}\n\n{% if syncPopularHighlightsToggle and highlight.isPopular %}\n> [{{ highlight.markText | trim }}](<{{ deeplink }}>) ^{{ highlight.bookmarkId }}\n> 🔥 {{ highlight.popularCount }} 人共读\n{% else %}\n> [{{ highlight.markText | trim }}](<{{ deeplink }}>) ^{{ highlight.bookmarkId }}\n{% endif %}\n\n{% else %}\n\n{% if syncPopularHighlightsToggle and highlight.isPopular %}\n> [{{ highlight.markText | trim }}](<{{ deeplink }}>) ^{{ highlight.bookmarkId }}\n> 🔥 {{ highlight.popularCount }} 人共读\n{% else %}\n> [{{ highlight.markText | trim }}](<{{ deeplink }}>) ^{{ highlight.bookmarkId }}\n{% endif %}\n\n{% endif %}\n{% endfor %}\n{% endfor %}\n",
+      "trimBlocks": true,
+      "isBuiltIn": true,
+      "isReadOnly": true,
+      "source": "builtin"
+    },
+    {
+      "id": "user_1786942533992",
+      "name": "合并式模板 (副本)",
+      "description": "划线和想法 inline 展示，适合快速回顾",
+      "template": "---\nisbn: {{ metaData.isbn }}\nlastReadDate: {{ metaData.lastReadDate }}\n---\n# 元数据\n> [!abstract] {{ metaData.title }}\n> - ![ {{ metaData.title }}|200]({{ metaData.cover }})\n> - 书名： {{ metaData.title }}\n> - 作者： {{ metaData.author }}\n> - 简介： {% set intro = metaData.intro | replace(\"\\n\",\"\") | replace(\"\\r\",\"\") %}{{ intro }}\n> - 出版时间： {{ metaData.publishTime }}\n> - ISBN： {{ metaData.isbn }}\n> - 字数： {{ metaData.totalWords }}\n> - 分类： {{ metaData.category }}\n> - 出版社： {{ metaData.publisher }}\n> - PC地址：{{ metaData.pcUrl }}\n\n# 高亮划线\n{% if syncPopularHighlightsToggle %}\n{% for chapter in chapterHighlights %}\n{% if chapter.level == 1 %}\n## {{ chapter.chapterTitle }}\n{% elif chapter.level == 2 %}\n### {{ chapter.chapterTitle }}\n{% elif chapter.level == 3 %}\n#### {{ chapter.chapterTitle }}\n{% endif %}\n{% for highlight in chapter.highlights %}\n{% set rangeParts = highlight.range | split(\"-\") %}\n{% set deeplink = \"weread://bestbookmark?bookId=\" + metaData.bookId + \"&chapterUid=\" + highlight.chapterUid + \"&rangeStart=\" + rangeParts[0] + \"&rangeEnd=\" + rangeParts[1] %}\n{% if highlight.isPopular and highlight.isUserHighlight %}\n{# 用户自己的划线 + 热门：📌🔥 + 共读人数 #}\n{% if highlight.reviewContent %}\n> 📌🔥 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> 🔥 {{ highlight.popularCount }} 人共读\n> 💭 {{ highlight.reviewContent }} \n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n{% else %}\n> 📌🔥 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> 🔥 {{ highlight.popularCount }} 人共读\n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n\n{% endif %}\n{% elif highlight.isPopular %}\n{# 只有热门划线（非用户）：🔥 + 共读人数 #}\n> 🔥 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> 📊 {{ highlight.popularCount }} 人共读 ^{{ highlight.bookmarkId }}\n\n{% else %}\n{# 普通用户划线（非热门）：📌 #}\n{% if highlight.reviewContent %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> 💭 {{ highlight.reviewContent }} \n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n{% else %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n\n{% endif %}\n{% endif %}\n{% endfor %}\n{% endfor %}\n{% else %}\n{% for chapter in chapterHighlights %}\n{% if chapter.level == 1 %}\n## {{ chapter.chapterTitle }}\n{% elif chapter.level == 2 %}\n### {{ chapter.chapterTitle }}\n{% elif chapter.level == 3 %}\n#### {{ chapter.chapterTitle }}\n{% endif %}\n{% for highlight in chapter.highlights %}\n{% set rangeParts = highlight.range | split(\"-\") %}\n{% set deeplink = \"weread://bestbookmark?bookId=\" + metaData.bookId + \"&chapterUid=\" + highlight.chapterUid + \"&rangeStart=\" + rangeParts[0] + \"&rangeEnd=\" + rangeParts[1] %}\n{# 普通用户划线（不显示热门）：📌 #}\n{% if highlight.reviewContent %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n 💭 {{ highlight.reviewContent }} \n ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n{% else %}\n> 📌 [{{ highlight.markText | trim }}](<{{ deeplink }}>)\n> ⏱ {{ highlight.createTime }} ^{{ highlight.bookmarkId }}\n\n{% endif %}\n{% endfor %}\n{% endfor %}\n{% endif %}\n\n# 读书笔记\n{% for chapter in bookReview.chapterReviews %}\n{% if chapter.reviews or chapter.chapterReview %}\n## {{ chapter.chapterTitle }}\n{% if chapter.chapterReviews %}\n{% for chapterReview in chapter.chapterReviews %}\n### 章节评论 No.{{ loop.index }}\n- {{ chapterReview.content }} ^{{ chapterReview.reviewId }}\n    - ⏱ {{ chapterReview.createTime }}\n{% endfor %}\n{% endif %}\n{% if chapter.reviews %}\n{% for review in chapter.reviews %}\n### 划线评论\n> 📌 {{ review.abstract | trim }} ^{{ review.reviewId }}\n    💭 {{ review.content }}\n    ⏱ {{ review.createTime }}\n{% endfor %}\n{% endif %}\n{% endif %}\n{% endfor %}\n\n# 本书评论\n{% if bookReview.bookReviews %}\n{% for bookReview in bookReview.bookReviews %}\n## 书评 No.{{ loop.index }}\n{{ bookReview.mdContent }} ^{{ bookReview.reviewId }}\n⏱ {{ bookReview.createTime }}\n{% endfor %}\n{% endif %}\n",
+      "trimBlocks": true,
+      "isBuiltIn": false,
+      "isReadOnly": false,
+      "source": "custom"
+    },
+    {
+      "id": "user_1786942954648",
+      "name": "自己划线部分和日期",
+      "description": "",
+      "template": "---\nisbn: {{ metaData.isbn }}\ntitle: {{ metaData.title }}\nauthor: {{ metaData.author }}\n---\n",
+      "trimBlocks": true,
+      "isBuiltIn": false,
+      "isReadOnly": false,
+      "source": "custom"
+    }
+  ],
+  "activeThemeId": "user_1786942954648",
+  "wereadApiKey": "wrk-nJ0V1t3qTw2njfajRdKX6gAA",
+  "apiKeyValid": true,
+  "readingStatsLocation": "/",
+  "statsStartYear": 0,
+  "popularHighlightsCacheTtl": 7
+}

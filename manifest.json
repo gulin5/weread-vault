@@ -1,0 +1,10 @@
+{
+	"id": "weread-vault",
+	"name": "Weread Vault",
+	"version": "1.0.3",
+	"minAppVersion": "1.8.7",
+	"description": "同步微信读书、导入纸质书单，并将个人读书笔记整理为长期知识库。",
+	"author": "zhengxn1",
+	"authorUrl": "https://github.com/zhengxn1",
+	"isDesktopOnly": true
+}
