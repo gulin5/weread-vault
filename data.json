@@ -7,7 +7,7 @@
     },
     {
       "name": "wr_skey",
-      "value": "_G9vI2ij"
+      "value": "hb3GkjBw"
     },
     {
       "name": "wr_vid",
@@ -31,7 +31,7 @@
   "insertAfter": "<!-- start of weread -->",
   "insertBefore": "<!-- end of weread -->",
   "dailyNotesFormat": "YYYY-MM-DD",
-  "lastCookieTime": 1788498312655,
+  "lastCookieTime": 1788846267363,
   "isCookieValid": true,
   "user": "",
   "userVid": "391790941",
@@ -65,10 +65,269 @@
   "cookieRefreshInterval": 12,
   "scheduledSyncToggle": false,
   "scheduledSyncInterval": 35,
-  "lastSyncTime": 1788436370542,
-  "lastSyncBookCount": 17,
+  "lastSyncTime": 1788846232226,
+  "lastSyncBookCount": 19,
   "lastSyncBookTitles": [],
   "syncLogs": [
+    {
+      "id": "sync-1788846220406",
+      "timestamp": 1788846220406,
+      "totalBooks": 19,
+      "syncedBooks": 19,
+      "skippedBooks": 0,
+      "duration": 11.82,
+      "notes": [
+        {
+          "bookId": "3300213202",
+          "title": "原子习惯：复利成长的微系统构建",
+          "filePath": "books read/笔记/原子习惯：复利成长的微系统构建.md"
+        },
+        {
+          "bookId": "39980443",
+          "title": "学会提问（原书第12版）",
+          "filePath": "books read/笔记/学会提问.md"
+        },
+        {
+          "bookId": "3300224526",
+          "title": "雨的历史",
+          "filePath": "books read/笔记/雨的历史.md"
+        },
+        {
+          "bookId": "30212113",
+          "title": "那不勒斯四部曲",
+          "filePath": "books read/笔记/那不勒斯四部曲.md"
+        },
+        {
+          "bookId": "3300042999",
+          "title": "你的夏天还好吗？",
+          "filePath": "books read/笔记/你的夏天还好吗？.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "3300067776",
+          "title": "明亮的夜晚",
+          "filePath": "books read/笔记/明亮的夜晚.md"
+        },
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1788845619109",
+      "timestamp": 1788845619109,
+      "totalBooks": 19,
+      "syncedBooks": 19,
+      "skippedBooks": 0,
+      "duration": 13.943,
+      "notes": [
+        {
+          "bookId": "3300213202",
+          "title": "原子习惯：复利成长的微系统构建",
+          "filePath": "books read/笔记/原子习惯：复利成长的微系统构建.md"
+        },
+        {
+          "bookId": "39980443",
+          "title": "学会提问（原书第12版）",
+          "filePath": "books read/笔记/学会提问.md"
+        },
+        {
+          "bookId": "3300224526",
+          "title": "雨的历史",
+          "filePath": "books read/笔记/雨的历史.md"
+        },
+        {
+          "bookId": "30212113",
+          "title": "那不勒斯四部曲",
+          "filePath": "books read/笔记/那不勒斯四部曲.md"
+        },
+        {
+          "bookId": "3300042999",
+          "title": "你的夏天还好吗？",
+          "filePath": "books read/笔记/你的夏天还好吗？.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "3300067776",
+          "title": "明亮的夜晚",
+          "filePath": "books read/笔记/明亮的夜晚.md"
+        },
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1788845226916",
+      "timestamp": 1788845226916,
+      "totalBooks": 19,
+      "syncedBooks": 19,
+      "skippedBooks": 0,
+      "duration": 12.268,
+      "notes": [
+        {
+          "bookId": "3300213202",
+          "title": "原子习惯：复利成长的微系统构建",
+          "filePath": "books read/笔记/原子习惯：复利成长的微系统构建.md"
+        },
+        {
+          "bookId": "39980443",
+          "title": "学会提问（原书第12版）",
+          "filePath": "books read/笔记/学会提问.md"
+        },
+        {
+          "bookId": "3300224526",
+          "title": "雨的历史",
+          "filePath": "books read/笔记/雨的历史.md"
+        },
+        {
+          "bookId": "30212113",
+          "title": "那不勒斯四部曲",
+          "filePath": "books read/笔记/那不勒斯四部曲.md"
+        },
+        {
+          "bookId": "3300042999",
+          "title": "你的夏天还好吗？",
+          "filePath": "books read/笔记/你的夏天还好吗？.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "3300067776",
+          "title": "明亮的夜晚",
+          "filePath": "books read/笔记/明亮的夜晚.md"
+        },
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
+    {
+      "id": "sync-1788844972492",
+      "timestamp": 1788844972492,
+      "totalBooks": 18,
+      "syncedBooks": 18,
+      "skippedBooks": 0,
+      "duration": 12.175,
+      "notes": [
+        {
+          "bookId": "39980443",
+          "title": "学会提问（原书第12版）",
+          "filePath": "books read/笔记/学会提问.md"
+        },
+        {
+          "bookId": "3300224526",
+          "title": "雨的历史",
+          "filePath": "books read/笔记/雨的历史.md"
+        },
+        {
+          "bookId": "30212113",
+          "title": "那不勒斯四部曲",
+          "filePath": "books read/笔记/那不勒斯四部曲.md"
+        },
+        {
+          "bookId": "3300042999",
+          "title": "你的夏天还好吗？",
+          "filePath": "books read/笔记/你的夏天还好吗？.md"
+        },
+        {
+          "bookId": "44081364",
+          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
+          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
+        },
+        {
+          "bookId": "3300186839",
+          "title": "Heidi《海蒂》英文原版",
+          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
+        },
+        {
+          "bookId": "3300067776",
+          "title": "明亮的夜晚",
+          "filePath": "books read/笔记/明亮的夜晚.md"
+        },
+        {
+          "bookId": "38245897",
+          "title": "自卑与超越",
+          "filePath": "books read/笔记/自卑与超越.md"
+        },
+        {
+          "bookId": "27049318",
+          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
+          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
+        },
+        {
+          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
+          "title": "Because of Winn-Dixie",
+          "filePath": "books read/笔记/Because of Winn-Dixie.md"
+        }
+      ],
+      "success": true
+    },
     {
       "id": "sync-1788436338604",
       "timestamp": 1788436338604,
@@ -306,150 +565,6 @@
       "syncedBooks": 13,
       "skippedBooks": 0,
       "duration": 8.591,
-      "notes": [
-        {
-          "bookId": "38245897",
-          "title": "自卑与超越",
-          "filePath": "books read/笔记/自卑与超越.md"
-        },
-        {
-          "bookId": "44081364",
-          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
-          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
-        },
-        {
-          "bookId": "3300186839",
-          "title": "Heidi《海蒂》英文原版",
-          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
-        },
-        {
-          "bookId": "27049318",
-          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
-          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
-        },
-        {
-          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
-          "title": "Because of Winn-Dixie",
-          "filePath": "books read/笔记/Because of Winn-Dixie.md"
-        }
-      ],
-      "success": true
-    },
-    {
-      "id": "sync-1787025915966",
-      "timestamp": 1787025915966,
-      "totalBooks": 13,
-      "syncedBooks": 13,
-      "skippedBooks": 0,
-      "duration": 8.657,
-      "notes": [
-        {
-          "bookId": "38245897",
-          "title": "自卑与超越",
-          "filePath": "books read/笔记/自卑与超越.md"
-        },
-        {
-          "bookId": "44081364",
-          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
-          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
-        },
-        {
-          "bookId": "3300186839",
-          "title": "Heidi《海蒂》英文原版",
-          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
-        },
-        {
-          "bookId": "27049318",
-          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
-          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
-        },
-        {
-          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
-          "title": "Because of Winn-Dixie",
-          "filePath": "books read/笔记/Because of Winn-Dixie.md"
-        }
-      ],
-      "success": true
-    },
-    {
-      "id": "sync-1787023815955",
-      "timestamp": 1787023815955,
-      "totalBooks": 13,
-      "syncedBooks": 13,
-      "skippedBooks": 0,
-      "duration": 8.139,
-      "notes": [
-        {
-          "bookId": "38245897",
-          "title": "自卑与超越",
-          "filePath": "books read/笔记/自卑与超越.md"
-        },
-        {
-          "bookId": "44081364",
-          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
-          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
-        },
-        {
-          "bookId": "3300186839",
-          "title": "Heidi《海蒂》英文原版",
-          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
-        },
-        {
-          "bookId": "27049318",
-          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
-          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
-        },
-        {
-          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
-          "title": "Because of Winn-Dixie",
-          "filePath": "books read/笔记/Because of Winn-Dixie.md"
-        }
-      ],
-      "success": true
-    },
-    {
-      "id": "sync-1787021715955",
-      "timestamp": 1787021715955,
-      "totalBooks": 13,
-      "syncedBooks": 13,
-      "skippedBooks": 0,
-      "duration": 8.857,
-      "notes": [
-        {
-          "bookId": "38245897",
-          "title": "自卑与超越",
-          "filePath": "books read/笔记/自卑与超越.md"
-        },
-        {
-          "bookId": "44081364",
-          "title": "人类简史三部曲：重印版（尤瓦尔·赫拉利作品）（套装全3册）",
-          "filePath": "books read/笔记/人类简史三部曲：重印版.md"
-        },
-        {
-          "bookId": "3300186839",
-          "title": "Heidi《海蒂》英文原版",
-          "filePath": "books read/笔记/Heidi《海蒂》英文原版.md"
-        },
-        {
-          "bookId": "27049318",
-          "title": "曼昆《经济学原理（微观经济学分册）》（第7版）复习全书【核心讲义＋模拟试题详解】",
-          "filePath": "books read/笔记/曼昆《经济学原理复习全书【核心讲义＋模拟试题详解】.md"
-        },
-        {
-          "bookId": "CB_EHr0r04wn4Gg79675g4JN4qV",
-          "title": "Because of Winn-Dixie",
-          "filePath": "books read/笔记/Because of Winn-Dixie.md"
-        }
-      ],
-      "success": true
-    },
-    {
-      "id": "sync-1787019616247",
-      "timestamp": 1787019616247,
-      "totalBooks": 13,
-      "syncedBooks": 13,
-      "skippedBooks": 0,
-      "duration": 8.746,
       "notes": [
         {
           "bookId": "38245897",

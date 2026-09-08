@@ -30428,6 +30428,16 @@
       }
       return "---\n" + (0, t.stringifyYaml)(o) + "---\n" + e;
     };
+    // Existing vault files are immutable to this plugin. Only explicit first-time note creation is allowed.
+    function wereadRejectVaultWrite() {
+      const error = new Error("笔记保护：已阻止插件改写或删除文件");
+      error.code = "WEREAD_READ_ONLY";
+      throw error;
+    }
+    function wereadReadOnlyNotice() {
+      new t.Notice("笔记保护：仅允许打开或首次创建笔记，已禁用此操作");
+      return Promise.resolve(null);
+    }
     class E {
       constructor(e, t, r) {
         ((this.getWereadNoteAnnotationFile = (e) => {
@@ -30459,16 +30469,7 @@
           (this.renderer = new m()));
       }
       saveDailyNotes(r, n) {
-        return e(this, void 0, void 0, function* () {
-          const e = yield this.fileExists(r),
-            i = this.buildAppendContent(n);
-          if (e) {
-            const e = yield this.getFileByPath(r),
-              t = yield this.vault.cachedRead(e),
-              n = yield this.insertAfter(t, i);
-            this.vault.modify(e, n);
-          } else new t.Notice("没有找到Daily Note，请先创建" + r);
-        });
+        return Promise.resolve().then(wereadRejectVaultWrite);
       }
       buildAppendContent(e) {
         return e
@@ -30550,22 +30551,81 @@
         return `${o}\n${e}\n${a.slice(c - 1).join("\n")}`;
       }
       saveNotebook(t) {
-        return e(this, void 0, void 0, function* () {
-          const e = t.metaData.file;
-          if (!e) {
-            const e = yield this.getNewNotebookFilePath(t),
-              r = this.renderer.render(t),
-              n = _(r, t, void 0, this.app);
-            return (yield this.vault.create(e, n)).path;
-          }
-          if (e.new) {
-            const r = e.file,
-              n = this.renderer.render(t),
-              i = _(n, t, r, this.app);
-            return (yield this.vault.modify(r, i), r.path);
-          }
-          return null;
+        return Promise.resolve().then(wereadRejectVaultWrite);
+      }
+      findLinkedNote(book) {
+        const bookId = String(book.bookId);
+        const rememberedPath = this.createdNotePaths && this.createdNotePaths.get(bookId);
+        const remembered = rememberedPath && this.vault.getAbstractFileByPath(rememberedPath);
+        if (remembered instanceof t.TFile) return remembered;
+        const files = this.vault.getMarkdownFiles();
+        const sameBook = files.find((file) => {
+          const meta = this.metadataCache.getFileCache(file)?.frontmatter;
+          return meta?.bookId != null && String(meta.bookId) === bookId;
         });
+        if (sameBook) return sameBook;
+        const normalizeTitle = (title) => String(title || "")
+          .toLocaleLowerCase()
+          .replace(/[（(\[【].*?[）)\]】]/g, "")
+          .replace(/[\s《》〈〉「」『』]/g, "");
+        const title = normalizeTitle(book.title);
+        if (!title) return null;
+        return files.find((file) => {
+          const meta = this.metadataCache.getFileCache(file)?.frontmatter;
+          // A different book ID must never be treated as the same book just because its title matches.
+          if (meta?.bookId != null && String(meta.bookId) !== bookId) return false;
+          return normalizeTitle(file.basename) === title || normalizeTitle(meta?.title) === title;
+        }) || null;
+      }
+      getOrCreateLinkedNote(book) {
+        if (!this.pendingNoteCreations) this.pendingNoteCreations = new Map();
+        const bookId = String(book?.bookId || "");
+        const pending = this.pendingNoteCreations.get(bookId);
+        if (pending) return pending;
+        const task = e(this, void 0, void 0, function* () {
+          if (!bookId || !book.title?.trim()) throw new Error("缺少书籍 ID 或书名，无法创建笔记");
+          const existing = this.findLinkedNote(book);
+          if (existing) return existing;
+          const folder = [l(f).noteLocation || "", this.getSubFolderPath(book)]
+            .filter(Boolean).join("/").replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+          if (folder.split("/").some((part) => part === ".." || part.includes(":")))
+            throw new Error("笔记保存位置必须位于当前仓库内");
+          const filename = this.getFileName(book);
+          if (!filename || /[\\/]/.test(filename)) throw new Error("笔记文件名无效");
+          const path = t.normalizePath(`${folder ? folder + "/" : ""}${filename}.md`);
+          // Check the adapter too: a file may exist before Obsidian has indexed it.
+          if (yield this.vault.adapter.exists(path))
+            throw new Error(`文件已存在，已保留原内容：${path}`);
+          const meta = {
+            doc_type: k, bookId, title: book.title, author: book.author || "",
+            noteCount: Number(book.noteCount) || 0, reviewCount: Number(book.reviewCount) || 0,
+          };
+          if (book.cover) meta.cover = book.cover;
+          const content = `---\n${t.stringifyYaml(meta)}---\n\n# ${book.title.replace(/[\r\n]+/g, " ")}\n\n## 读书笔记\n\n`;
+          let parent = "";
+          for (const part of folder.split("/").filter((part) => part && part !== ".")) {
+            parent = parent ? `${parent}/${part}` : part;
+            const entry = this.vault.getAbstractFileByPath(parent);
+            if (entry && !(entry instanceof t.TFolder)) throw new Error(`保存位置不是文件夹：${parent}`);
+            if (!entry && !(yield this.vault.adapter.exists(parent))) {
+              try {
+                yield this.vault.createFolder(parent);
+              } catch (error) {
+                // Another first-time creation may have created the same parent concurrently.
+                if (!(this.vault.getAbstractFileByPath(parent) instanceof t.TFolder)) throw error;
+              }
+            }
+          }
+          const found = this.findLinkedNote(book);
+          if (found) return found;
+          // Vault.create rejects an existing target. Never fall back to modify or adapter.write.
+          const file = yield this.vault.create(path, content);
+          if (!this.createdNotePaths) this.createdNotePaths = new Map();
+          this.createdNotePaths.set(bookId, file.path);
+          return file;
+        });
+        this.pendingNoteCreations.set(bookId, task);
+        return task.finally(() => this.pendingNoteCreations.delete(bookId));
       }
       getNotebookFiles() {
         return e(this, void 0, void 0, function* () {
@@ -30610,19 +30670,10 @@
         });
       }
       deleteNotebookFile(t) {
-        return e(this, void 0, void 0, function* () {
-          yield this.app.fileManager.trashFile(t);
-        });
+        return Promise.resolve().then(wereadRejectVaultWrite);
       }
       getNewNotebookFilePath(t) {
-        return e(this, void 0, void 0, function* () {
-          const e = `${l(f).noteLocation}/${this.getSubFolderPath(t.metaData)}`;
-          return (
-            (yield this.vault.adapter.exists(e)) ||
-              (yield this.vault.createFolder(e)),
-            `${e}/${this.getFileName(t.metaData)}.md`
-          );
-        });
+        return Promise.resolve().then(wereadRejectVaultWrite);
       }
       getFileName(e) {
         const t = l(f).fileNameType,
@@ -30700,74 +30751,16 @@
         });
       }
       set(t, r, n) {
-        return e(this, void 0, void 0, function* () {
-          var e;
-          try {
-            const i = l(f),
-              o = {
-                bookId: t,
-                cachedAt: Date.now(),
-                ttl:
-                  null !== (e = i.popularHighlightsCacheTtl) && void 0 !== e
-                    ? e
-                    : 7,
-                items: r,
-                chapters: n,
-              },
-              a = this.getCachePath(t);
-            (yield this.ensureCacheDir(),
-              yield this.vault.adapter.write(a, JSON.stringify(o, null, 2)));
-          } catch (e) {
-            console.error(`[weread plugin] 写入热门划线缓存失败: ${t}`, e);
-          }
-        });
+        return Promise.resolve();
       }
       clear(r) {
-        return e(this, void 0, void 0, function* () {
-          try {
-            const e = this.getCachePath(r);
-            if (yield this.vault.adapter.exists(e)) {
-              const r = this.vault.getAbstractFileByPath(e);
-              r instanceof t.TFile && (yield this.app.fileManager.trashFile(r));
-            }
-          } catch (e) {
-            console.error(`[weread plugin] 清除热门划线缓存失败: ${r}`, e);
-          }
-        });
+        return Promise.resolve();
       }
       clearExpired() {
-        return e(this, void 0, void 0, function* () {
-          try {
-            const e = this.cacheDir;
-            if (!(yield this.vault.adapter.exists(e))) return 0;
-            const r = yield this.listFiles(e);
-            let n = 0;
-            for (const i of r)
-              if (i.startsWith("popular-") && i.endsWith(".json"))
-                try {
-                  const r = yield this.vault.adapter.read(`${e}/${i}`),
-                    o = JSON.parse(r);
-                  if (this.isCacheExpired(o)) {
-                    const r = `${e}/${i}`,
-                      o = this.vault.getAbstractFileByPath(r);
-                    (o instanceof t.TFile &&
-                      (yield this.app.fileManager.trashFile(o)),
-                      n++);
-                  }
-                } catch (e) {}
-            return n;
-          } catch (e) {
-            return (console.error("[weread plugin] 清除过期缓存失败", e), 0);
-          }
-        });
+        return Promise.resolve(0);
       }
       ensureCacheDir() {
-        return e(this, void 0, void 0, function* () {
-          try {
-            (yield this.vault.adapter.exists(this.cacheDir)) ||
-              (yield this.vault.createFolder(this.cacheDir));
-          } catch (e) {}
-        });
+        return Promise.resolve();
       }
       listFiles(r) {
         return e(this, void 0, void 0, function* () {
@@ -30979,185 +30972,19 @@
           (this.cacheManager = new T(r)));
       }
       syncNotebook(r) {
-        return e(this, void 0, void 0, function* () {
-          const e = (yield this.getALlMetadata()).find(
-            (e) => e.bookId === r.bookId,
-          );
-          if (((r.new = !0), (e.file = r), e)) {
-            const r = yield this.convertToNotebook(e);
-            (yield this.saveNotebook(r),
-              new t.Notice(`当前笔记 《${e.title}》 同步成功!`));
-          } else new t.Notice("当前笔记元数据缺少，同步失败!");
-        });
+        return wereadReadOnlyNotice();
       }
       syncBookById(r) {
-        return e(this, void 0, void 0, function* () {
-          const e = yield this.getALlMetadata(),
-            n = yield this.fileManager.getNotebookFiles(),
-            i = this.getDuplicateBooks(e),
-            o = e.find((e) => e.bookId === r);
-          if (!o) return void new t.Notice("未在远程书架中找到该书籍");
-          ((o.file = yield this.getLocalNotebookFile(o, n, !0)),
-            i.has(o.title) && (o.duplicate = !0));
-          const a = yield this.convertToNotebook(o);
-          (yield this.saveNotebook(a),
-            new t.Notice(`《${o.title}》已同步到本地`));
-        });
+        return wereadReadOnlyNotice();
       }
       importBookFromSearch(t) {
-        return e(this, void 0, void 0, function* () {
-          var e, r, n, i, o, a, s, l;
-          const c =
-            null !==
-              (e = (yield this.fileManager.getNotebookFiles()).find(
-                (e) => e.bookId === t.bookId,
-              )) && void 0 !== e
-              ? e
-              : null;
-          if (c) return c.file.path;
-          const d = {
-              bookId: t.bookId,
-              title: t.title,
-              author: t.author || "未知作者",
-              cover:
-                null !==
-                  (n =
-                    null === (r = t.cover) || void 0 === r
-                      ? void 0
-                      : r.replace("/s_", "/t7_")) && void 0 !== n
-                  ? n
-                  : "",
-              bookType: null !== (i = t.type) && void 0 !== i ? i : 0,
-              publishTime:
-                null !== (o = t.publishTime) && void 0 !== o ? o : "",
-              noteCount:
-                null !== (a = null == c ? void 0 : c.noteCount) && void 0 !== a
-                  ? a
-                  : 0,
-              reviewCount:
-                null !== (s = null == c ? void 0 : c.reviewCount) &&
-                void 0 !== s
-                  ? s
-                  : 0,
-              lastReadDate: "",
-              url: L(t.bookId),
-              pcUrl: L(t.bookId),
-              file: null,
-            },
-            u = yield this.apiManager.getBook(d.bookId);
-          return (
-            u &&
-              ((d.category = u.category),
-              (d.publisher = u.publisher),
-              (d.isbn = u.isbn),
-              (d.intro = u.intro),
-              (d.totalWords = u.totalWords),
-              (d.publishTime =
-                null !== (l = u.publishTime) && void 0 !== l
-                  ? l
-                  : d.publishTime),
-              (d.rating = u.newRating / 10 + "%")),
-            this.saveNotebook({
-              metaData: d,
-              chapterHighlights: [],
-              bookReview: { chapterReviews: [], bookReviews: [] },
-              popularHighlights: [],
-            })
-          );
-        });
+        return wereadReadOnlyNotice();
       }
       syncNotebooks() {
-        return e(this, arguments, void 0, function* (e = !1, r, n) {
-          var i, o;
-          const a = new Date().getTime(),
-            s = yield this.getALlMetadata(),
-            l = yield this.filterNoteMetas(e, s);
-          let c = 0,
-            d = 0;
-          const u = l.length,
-            h = new t.Notice("", 0),
-            p = [];
-          let g;
-          const m = activeDocument.createDocumentFragment(),
-            v = m.createDiv({ cls: "weread-notice-progress" }),
-            b = v.createDiv({ cls: "weread-notice-progress-header" }),
-            w = v
-              .createDiv({ cls: "weread-notice-progress-track" })
-              .createDiv({ cls: "weread-notice-progress-fill" }),
-            y = v.createDiv({ cls: "weread-notice-progress-title" });
-          h.setMessage(m);
-          const k = (e, t) => {
-            const r = u > 0 ? Math.round((e / u) * 100) : 0;
-            (b.setText(`📚 微信读书同步中 · ${e}/${u} 本 (${r}%)`),
-              w.setCssStyles({ width: `${r}%` }),
-              y.setText(t ? `正在同步：${t}` : ""));
-          };
-          k(0, null === (i = l[0]) || void 0 === i ? void 0 : i.title);
-          try {
-            for (
-              let e = 0;
-              e < l.length && !(null == n ? void 0 : n.cancelled);
-              e++
-            ) {
-              const t = l[e],
-                r = l[e + 1];
-              k(c, t.title);
-              try {
-                const e = yield this.convertToNotebook(t),
-                  r = yield this.saveNotebook(e);
-                (c++,
-                  r &&
-                    p.push({ bookId: t.bookId, title: t.title, filePath: r }));
-              } catch (e) {
-                (d++,
-                  (g = e instanceof Error ? e.message : String(e)),
-                  console.error(`[weread plugin] 同步书籍 ${t.title} 失败`, e));
-              }
-              k(c, null == r ? void 0 : r.title);
-            }
-          } catch (e) {
-            throw (h.hide(), e);
-          }
-          const x =
-            null !== (o = null == n ? void 0 : n.cancelled) &&
-            void 0 !== o &&
-            o;
-          this.saveToJounal(r, s);
-          const _ = (new Date().getTime() - a) / 1e3,
-            E = {
-              id: `sync-${a}`,
-              timestamp: a,
-              totalBooks: s.length,
-              syncedBooks: c,
-              skippedBooks: l.length - c,
-              duration: _,
-              notes: p,
-              success: !g,
-              errorMessage: g,
-            };
-          f.actions.addSyncLog(E);
-          const T = x ? "🚫" : "✅",
-            S = x ? "已取消，已更新" : "完成！更新";
-          (b.setText(`${T} 同步${S} ${c} 本书`),
-            w.setCssStyles({ width: "100%" }),
-            x && w.setCssStyles({ background: "var(--text-muted)" }));
-          const C = [
-            `📚 书架共 ${s.length} 本 · 本次处理 ${u} 本`,
-            d > 0 ? `⚠️ ${d} 本同步失败` : "",
-            `⏱ 耗时 ${_.toFixed(1)} 秒`,
-          ].filter(Boolean);
-          return (
-            y.setText(C.join(" · ")),
-            window.setTimeout(() => h.hide(), 5e3),
-            c
-          );
-        });
+        return wereadReadOnlyNotice();
       }
       syncNotesToJounal(t) {
-        return e(this, void 0, void 0, function* () {
-          const e = yield this.getALlMetadata();
-          this.saveToJounal(t, e);
-        });
+        return wereadReadOnlyNotice();
       }
       convertToNotebook(t) {
         return e(this, void 0, void 0, function* () {
@@ -31558,44 +31385,7 @@
         });
       }
       saveToJounal(t, r) {
-        return e(this, void 0, void 0, function* () {
-          const e = this.filterMetasByCurrentSettings(r).filter(
-              (e) => e.lastReadDate === t,
-            ),
-            n = [];
-          for (const t of e) {
-            const e = yield this.convertToNotebook(t);
-            n.push(e);
-          }
-          if (l(f).dailyNotesToggle) {
-            const e = ((e) => {
-                const t = window.moment().format("YYYYMMDD"),
-                  r = [];
-                for (const n of e) {
-                  const e = n.chapterHighlights
-                      .flatMap((e) => e.highlights)
-                      .filter((e) => {
-                        const r = window
-                          .moment(1e3 * e.created)
-                          .format("YYYYMMDD");
-                        return t === r;
-                      }),
-                    i = [];
-                  if (e)
-                    for (const t of e)
-                      i.push({
-                        refBlockId: t.bookmarkId,
-                        createTime: t.created,
-                      });
-                  i.length > 0 &&
-                    r.push({ metaData: n.metaData, refBlocks: i });
-                }
-                return r;
-              })(n),
-              t = this.fileManager.getDailyNotePath(window.moment());
-            this.fileManager.saveDailyNotes(t, e);
-          }
-        });
+        return Promise.resolve().then(wereadRejectVaultWrite);
       }
       getDuplicateBooks(e) {
         const t = e.map((e) => e.title),
@@ -31623,16 +31413,7 @@
         });
       }
       saveNotebook(t) {
-        return e(this, void 0, void 0, function* () {
-          try {
-            return yield this.fileManager.saveNotebook(t);
-          } catch (e) {
-            return (
-              console.error("[Weread Vault] 同步书籍失败", t.metaData.title, e),
-              null
-            );
-          }
-        });
+        return Promise.resolve().then(wereadRejectVaultWrite);
       }
     }
     const q = (e) =>
@@ -32847,355 +32628,10 @@
         ((this.vault = e), (this.apiManager = t));
       }
       sync() {
-        return e(this, void 0, void 0, function* () {
-          const e = l(f);
-          if (!e.wereadApiKey)
-            return void new t.Notice(
-              "请先在设置中填写微信读书 API Key（wrk-xxx）",
-              5e3,
-            );
-          const r = new t.Notice("正在获取阅读统计数据…", 0);
-          try {
-            const n = new Date(),
-              i = n.getFullYear(),
-              o = n.getMonth() + 1,
-              a = Math.floor(new Date(i, 0, 1).getTime() / 1e3);
-            r.setMessage("获取历史总计…");
-            const s = yield this.apiManager.getReadingStats("overall");
-            if (!s)
-              return (
-                r.hide(),
-                void new t.Notice(
-                  "获取阅读统计失败，请检查 API Key 是否正确",
-                  5e3,
-                )
-              );
-            r.setMessage(`获取 ${i} 年数据…`);
-            const l = yield this.apiManager.getReadingStats("annually", a);
-            if (!l)
-              return (r.hide(), void new t.Notice("获取年度统计失败", 5e3));
-            r.setMessage(`获取 ${i} 年 ${o} 月数据…`);
-            const c = yield this.apiManager.getReadingStats("monthly");
-            if (!c)
-              return (r.hide(), void new t.Notice("获取月度统计失败", 5e3));
-            r.setMessage("生成统计文档…");
-            const d = (function (e, t, r, n, i) {
-              var o, a, s, l, c, d, u, h, p;
-              const f = new Date(),
-                g = [];
-              (g.push("---"),
-                g.push("title: 微信读书 · 阅读统计"),
-                g.push(`updated: ${f.toISOString().slice(0, 10)}`),
-                g.push("tags:"),
-                g.push("  - 阅读统计"),
-                g.push("  - 微信读书"),
-                g.push("---"),
-                g.push(""),
-                g.push("# 📚 微信读书 · 阅读数据分析"),
-                g.push(""),
-                g.push(
-                  `> 最后更新：${f.toLocaleString("zh-CN", { hour12: !1 })}`,
-                ),
-                g.push(""),
-                g.push("## 📊 一、历年总览"),
-                g.push(""));
-              const m = K(e.totalReadTime),
-                v = e.readDays;
-              if (
-                (g.push("| 指标 | 数值 |"),
-                g.push("|------|------|"),
-                g.push(
-                  `| 注册时间 | ${
-                    e.registTime
-                      ? (function (e) {
-                          if (!e) return "—";
-                          const t = new Date(1e3 * e);
-                          return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
-                        })(e.registTime)
-                      : "—"
-                  } |`,
-                ),
-                g.push(`| 累计阅读时长 | ${m} |`),
-                g.push(`| 累计阅读天数 | ${v} 天 |`),
-                null === (o = e.readStat) || void 0 === o ? void 0 : o.length)
-              )
-                for (const t of e.readStat)
-                  g.push(`| ${t.stat} | ${t.counts} |`);
-              if (
-                (g.push(""), e.readTimes && Object.keys(e.readTimes).length > 0)
-              ) {
-                (g.push("### 历年阅读时长"),
-                  g.push(""),
-                  g.push("| 年份 | 阅读时长 |"),
-                  g.push("|------|---------|"));
-                const t = Object.entries(e.readTimes).sort(
-                  ([e], [t]) => Number(e) - Number(t),
-                );
-                for (const [e, r] of t) {
-                  const t = new Date(1e3 * Number(e)).getFullYear();
-                  g.push(`| ${t} | ${K(r)} |`);
-                }
-                g.push("");
-              }
-              if (
-                (g.push(`## 📅 二、${n} 年阅读概况`),
-                g.push(""),
-                g.push("| 指标 | 数值 |"),
-                g.push("|------|------|"),
-                g.push(`| 总阅读时长 | ${K(t.totalReadTime)} |`),
-                g.push(`| 阅读天数 | ${t.readDays} 天 |`),
-                g.push(`| 日均时长 | ${K(t.dayAverageReadTime)} |`),
-                null === (a = t.readStat) || void 0 === a ? void 0 : a.length)
-              )
-                for (const e of t.readStat)
-                  g.push(`| ${e.stat} | ${e.counts} |`);
-              if (
-                (g.push(""), t.readTimes && Object.keys(t.readTimes).length > 0)
-              ) {
-                (g.push(`### ${n} 年逐月阅读时长`), g.push(""));
-                const e = Object.entries(t.readTimes).sort(
-                    ([e], [t]) => Number(e) - Number(t),
-                  ),
-                  r = e.map(([, e]) => e),
-                  i = e.map(
-                    ([e]) => `${new Date(1e3 * Number(e)).getMonth() + 1}月`,
-                  );
-                (g.push("```"), g.push(G(r, i, 24)), g.push("```"), g.push(""));
-              }
-              if (
-                ((null === (s = t.readLongest) || void 0 === s
-                  ? void 0
-                  : s.length) &&
-                  (g.push(`### ${n} 年阅读时长 TOP${t.readLongest.length}`),
-                  g.push(""),
-                  g.push("| # | 书名 | 作者 | 阅读时长 | 标签 |"),
-                  g.push("|---|------|------|---------|------|"),
-                  t.readLongest.forEach((e, t) => {
-                    var r, n, i, o, a, s, l, c, d, u;
-                    const h =
-                        null !==
-                          (o =
-                            null !==
-                              (n =
-                                null === (r = e.book) || void 0 === r
-                                  ? void 0
-                                  : r.title) && void 0 !== n
-                              ? n
-                              : null === (i = e.albumInfo) || void 0 === i
-                                ? void 0
-                                : i.name) && void 0 !== o
-                          ? o
-                          : "—",
-                      p =
-                        null !==
-                          (c =
-                            null !==
-                              (s =
-                                null === (a = e.book) || void 0 === a
-                                  ? void 0
-                                  : a.author) && void 0 !== s
-                              ? s
-                              : null === (l = e.albumInfo) || void 0 === l
-                                ? void 0
-                                : l.authorName) && void 0 !== c
-                          ? c
-                          : "—",
-                      f =
-                        null !==
-                          (u =
-                            null === (d = e.tags) || void 0 === d
-                              ? void 0
-                              : d.join("、")) && void 0 !== u
-                          ? u
-                          : "";
-                    g.push(
-                      `| ${t + 1} | ${h} | ${p} | ${K(e.readTime)} | ${f} |`,
-                    );
-                  }),
-                  g.push("")),
-                null === (l = t.preferCategory) || void 0 === l
-                  ? void 0
-                  : l.length)
-              ) {
-                (g.push(`### ${n} 年偏好分类`),
-                  g.push(""),
-                  g.push("| 分类 | 阅读本数 | 阅读时长 |"),
-                  g.push("|------|---------|---------|"));
-                for (const e of t.preferCategory)
-                  e.readingTime > 0 &&
-                    g.push(
-                      `| ${e.categoryTitle} | ${e.readingCount} 本 | ${K(e.readingTime)} |`,
-                    );
-                g.push("");
-              }
-              if (
-                null === (c = t.preferAuthor) || void 0 === c
-                  ? void 0
-                  : c.length
-              ) {
-                (g.push(`### ${n} 年偏好作者`),
-                  g.push(""),
-                  g.push("| 作者 | 阅读本数 | 阅读时长 |"),
-                  g.push("|------|---------|---------|"));
-                for (const e of t.preferAuthor)
-                  g.push(`| ${e.name} | ${e.count} 本 | ${e.readTime} |`);
-                g.push("");
-              }
-              if (
-                (g.push(`## 🗓️ 三、${n} 年 ${i} 月阅读概况`),
-                g.push(""),
-                g.push("| 指标 | 数值 |"),
-                g.push("|------|------|"),
-                g.push(`| 本月阅读时长 | ${K(r.totalReadTime)} |`),
-                g.push(`| 阅读天数 | ${r.readDays} 天 |`),
-                g.push(`| 日均时长 | ${K(r.dayAverageReadTime)} |`),
-                void 0 !== r.compare)
-              ) {
-                const e = (function (e) {
-                  if (null == e) return "";
-                  const t = Math.round(100 * e);
-                  return t >= 0 ? `↑${t}%` : `↓${Math.abs(t)}%`;
-                })(r.compare);
-                e && g.push(`| 与上月日均对比 | ${e} |`);
-              }
-              if (null === (d = r.readStat) || void 0 === d ? void 0 : d.length)
-                for (const e of r.readStat)
-                  g.push(`| ${e.stat} | ${e.counts} |`);
-              if (
-                (g.push(""), r.readTimes && Object.keys(r.readTimes).length > 0)
-              ) {
-                (g.push(`### ${i} 月每日阅读时长`), g.push(""));
-                const e = Object.entries(r.readTimes).sort(
-                    ([e], [t]) => Number(e) - Number(t),
-                  ),
-                  t = e.map(([, e]) => e),
-                  n = e.map(
-                    ([e]) => `${new Date(1e3 * Number(e)).getDate()}日`,
-                  );
-                (g.push("```"), g.push(G(t, n, 20)), g.push("```"), g.push(""));
-              }
-              if (
-                ((null === (u = r.readLongest) || void 0 === u
-                  ? void 0
-                  : u.length) &&
-                  (g.push(`### ${i} 月阅读时长 TOP${r.readLongest.length}`),
-                  g.push(""),
-                  g.push("| # | 书名 | 作者 | 阅读时长 | 标签 |"),
-                  g.push("|---|------|------|---------|------|"),
-                  r.readLongest.forEach((e, t) => {
-                    var r, n, i, o, a, s, l, c, d, u;
-                    const h =
-                        null !==
-                          (o =
-                            null !==
-                              (n =
-                                null === (r = e.book) || void 0 === r
-                                  ? void 0
-                                  : r.title) && void 0 !== n
-                              ? n
-                              : null === (i = e.albumInfo) || void 0 === i
-                                ? void 0
-                                : i.name) && void 0 !== o
-                          ? o
-                          : "—",
-                      p =
-                        null !==
-                          (c =
-                            null !==
-                              (s =
-                                null === (a = e.book) || void 0 === a
-                                  ? void 0
-                                  : a.author) && void 0 !== s
-                              ? s
-                              : null === (l = e.albumInfo) || void 0 === l
-                                ? void 0
-                                : l.authorName) && void 0 !== c
-                          ? c
-                          : "—",
-                      f =
-                        null !==
-                          (u =
-                            null === (d = e.tags) || void 0 === d
-                              ? void 0
-                              : d.join("、")) && void 0 !== u
-                          ? u
-                          : "";
-                    g.push(
-                      `| ${t + 1} | ${h} | ${p} | ${K(e.readTime)} | ${f} |`,
-                    );
-                  }),
-                  g.push("")),
-                null === (h = r.preferCategory) || void 0 === h
-                  ? void 0
-                  : h.length)
-              ) {
-                (g.push(`### ${i} 月偏好分类`),
-                  g.push(""),
-                  g.push("| 分类 | 阅读本数 | 阅读时长 |"),
-                  g.push("|------|---------|---------|"));
-                for (const e of r.preferCategory)
-                  e.readingTime > 0 &&
-                    g.push(
-                      `| ${e.categoryTitle} | ${e.readingCount} 本 | ${K(e.readingTime)} |`,
-                    );
-                g.push("");
-              }
-              return (
-                g.push("## 🎯 四、阅读偏好分析（年度）"),
-                g.push(""),
-                t.preferCategoryWord &&
-                  (g.push(`> ${t.preferCategoryWord}`), g.push("")),
-                24 ===
-                  (null === (p = t.preferTime) || void 0 === p
-                    ? void 0
-                    : p.length) &&
-                  (g.push("### 阅读时段分布"),
-                  g.push(""),
-                  t.preferTimeWord &&
-                    (g.push(`> ${t.preferTimeWord}`), g.push("")),
-                  g.push("```"),
-                  g.push(G(t.preferTime, Y, 20)),
-                  g.push("```"),
-                  g.push("")),
-                void 0 !== t.readRate &&
-                  t.wrReadTime &&
-                  t.wrListenTime &&
-                  (g.push("### 阅读方式"),
-                  g.push(""),
-                  g.push("| 方式 | 时长 | 占比 |"),
-                  g.push("|------|------|------|"),
-                  g.push(`| 文字阅读 | ${K(t.wrReadTime)} | ${t.readRate}% |`),
-                  g.push(
-                    `| 听书 | ${K(t.wrListenTime)} | ${100 - t.readRate}% |`,
-                  ),
-                  g.push("")),
-                g.join("\n")
-              );
-            })(s, l, c, i, o);
-            (yield this.saveFile(d, e.readingStatsLocation),
-              r.hide(),
-              new t.Notice("✅ 阅读统计已同步", 4e3));
-          } catch (e) {
-            (r.hide(),
-              new t.Notice("阅读统计同步失败，请查看控制台", 5e3),
-              console.error("[weread plugin] 阅读统计同步失败", e));
-          }
-        });
+        return wereadReadOnlyNotice();
       }
       saveFile(t, r) {
-        return e(this, void 0, void 0, function* () {
-          const e = r.endsWith("/") ? r.slice(0, -1) : r,
-            n = "" === e ? "" : e;
-          n &&
-            ((yield this.vault.adapter.exists(n)) ||
-              (yield this.vault.createFolder(n)));
-          const i = n ? `${n}/微信读书阅读统计.md` : "微信读书阅读统计.md";
-          if (yield this.vault.adapter.exists(i)) {
-            const e = this.vault.getAbstractFileByPath(i);
-            if (e) return void (yield this.vault.modify(e, t));
-          }
-          yield this.vault.create(i, t);
-        });
+        return Promise.resolve().then(wereadRejectVaultWrite);
       }
     }
     class X {
@@ -34390,28 +33826,11 @@
       }
       display() {
         const { containerEl: e } = this;
-        (e.empty(),
-          (this.syncSettingsHeadingEl = null),
-          this.preloadSelectableBooks(),
-          this.showApiKeySetting(),
-          this.notebookFolder(),
-          this.bookshelfSettings(),
-          this.syncModeSettings(),
-          this.scheduledSync(),
-          new t.Setting(this.containerEl).setName("文件设置").setHeading(),
-          this.fileNameType(),
-          this.removeParens(),
-          this.filterInlineImages(),
-          this.subFolderType(),
-          new t.Setting(this.containerEl).setName("日记设置").setHeading(),
-          this.dailyNotes(),
-          l(f).dailyNotesToggle &&
-            (this.dailyNotesFolder(),
-            this.dailyNoteFormat(),
-            this.insertAfter()),
-          this.template(),
-          this.readingStatsSettings(),
-          t.Platform.isDesktopApp && this.showDebugHelp());
+        e.empty();
+        e.createEl("p", { text: "笔记保护：已有笔记只打开，没有笔记才创建；同步和覆盖已禁用。" });
+        this.showApiKeySetting();
+        this.notebookFolder();
+        this.bookshelfSettings();
       }
       showMobileLogin() {
         const e = this.containerEl.createDiv({
@@ -36097,6 +35516,7 @@
         return e(this, void 0, void 0, function* () {
           (this.contentEl.empty(),
             this.contentEl.addClass("weread-bookshelf-view"));
+          this.contentEl.createDiv({ cls: "weread-readonly-notice", text: "笔记保护 · 已有只打开，没有才创建" });
           const r = this.contentEl.createDiv({
               cls: "weread-bookshelf-toolbar",
             }),
@@ -36175,7 +35595,7 @@
               cls: "clickable-icon weread-bookshelf-icon-button weread-toolbar-icon-button",
               attr: { "aria-label": "新建关联读书笔记" },
             });
-          ((0, t.setIcon)(u, "pencil"),
+          ((u.disabled = !0), (0, t.setIcon)(u, "pencil"),
             (0, t.setTooltip)(u, "新建关联读书笔记"),
             (u.onclick = () => {
               this.plugin.openReadingNote(void 0, this.shelfBooks, () =>
@@ -36189,7 +35609,7 @@
             cls: "clickable-icon weread-bookshelf-icon-button weread-toolbar-icon-button",
             attr: { "aria-label": "从书单批量导入" },
           });
-          ((0, t.setIcon)(h, "list-plus"),
+          ((h.disabled = !0), (0, t.setIcon)(h, "list-plus"),
             (0, t.setTooltip)(h, "从书单批量导入"),
             (h.onclick = () => {
               this.plugin.openBookListImport(() =>
@@ -36213,13 +35633,13 @@
                   ? ((0, t.setIcon)(p, "refresh-ccw-dot"),
                     p.addClass("mod-warning"),
                     p.removeClass("mod-cta"),
-                    (0, t.setTooltip)(p, "强制同步（重新同步所有书籍）"))
+                    (0, t.setTooltip)(p, "刷新书架（只读）"))
                   : ((0, t.setIcon)(p, "refresh-ccw"),
                     p.addClass("mod-cta"),
                     p.removeClass("mod-warning"),
-                    (0, t.setTooltip)(p, `同步 (按住 ${b} 强制同步)`)));
+                    (0, t.setTooltip)(p, "刷新书架（只读）")));
             };
-          ((0, t.setTooltip)(p, `同步 (按住 ${b} 强制同步)`),
+          ((0, t.setTooltip)(p, "刷新书架（只读）"),
             p.addEventListener("mouseenter", () => {
               ((g = !0), w(m));
             }),
@@ -36262,36 +35682,7 @@
             attr: { "aria-label": "选项" },
           });
           ((0, t.setIcon)(_, "settings"),
-            (p.onclick = () =>
-              e(this, void 0, void 0, function* () {
-                if (v) return;
-                const e = m;
-                v = !0;
-                const r = { cancelled: !1 };
-                ((0, t.setIcon)(p, "square"),
-                  (0, t.setTooltip)(p, "取消同步"),
-                  p.removeClass("mod-cta"),
-                  p.addClass("mod-warning"),
-                  (_.disabled = !0),
-                  y && (y.disabled = !0));
-                const n = () => {
-                  r.cancelled = !0;
-                };
-                p.addEventListener("click", n, { once: !0 });
-                try {
-                  const t = yield this.plugin.startSync(e, r);
-                  (null != t ? t : 0) > 0 &&
-                    (this.bookshelfService.clearProgressCache(),
-                    yield new Promise((e) => window.setTimeout(e, 500)),
-                    yield this.loadBookshelf());
-                } finally {
-                  ((v = !1),
-                    p.removeEventListener("click", n),
-                    w(m),
-                    (_.disabled = !1),
-                    y && (y.disabled = !1));
-                }
-              })),
+            (p.onclick = () => this.loadBookshelf()),
             (_.onclick = () => {
               this.plugin.openWereadSettingsTab();
             }),
@@ -36441,7 +35832,7 @@
           }),
           u = d.createDiv({ cls: "weread-bookshelf-summary-icon" });
         if (
-          ((0, t.setIcon)(u, "pencil"),
+          ((u.disabled = !0), (0, t.setIcon)(u, "pencil"),
           d.createDiv({
             cls: "weread-bookshelf-summary-value",
             text: `${c} 个笔记`,
@@ -36529,7 +35920,7 @@
             attr: {
               title: this.hasAnyLocalNote(t)
                 ? `打开《${t.title}》本地笔记`
-                : `《${t.title}》暂无本地笔记`,
+                : `创建并打开《${t.title}》笔记`,
             },
           });
         (s.addClass("is-clickable"),
@@ -36559,27 +35950,20 @@
           ((0, t.setIcon)(a, "pencil"),
           (a.onclick = (t) => {
             (t.stopPropagation(),
-              this.plugin.openReadingNote(r, this.shelfBooks, () =>
-                e(this, void 0, void 0, function* () {
-                  ((this.localReadingNotes = yield ye(this.app)),
-                    this.renderBooks());
-                }),
-              ));
+              this.openLocalFile(r));
           }),
           r.remoteExists && !r.hasLocalFile)
         ) {
           const i = n.createEl("button", {
             cls: "clickable-icon weread-bookshelf-icon-button",
-            attr: { "aria-label": "同步此书" },
+            attr: { "aria-label": "创建并打开笔记" },
           });
-          ((0, t.setIcon)(i, "refresh-ccw"),
+          ((0, t.setIcon)(i, "file-plus"),
             (i.onclick = (t) =>
               e(this, void 0, void 0, function* () {
                 (t.stopPropagation(), (i.disabled = !0));
                 try {
-                  (yield this.plugin.syncBookById(r.bookId),
-                    yield new Promise((e) => window.setTimeout(e, 500)),
-                    yield this.loadBookshelf());
+                  yield this.openLocalFile(r);
                 } finally {
                   i.disabled = !1;
                 }
@@ -36598,7 +35982,7 @@
             cls: "clickable-icon weread-bookshelf-icon-button",
             attr: { "aria-label": "删除本地文件" },
           });
-          ((0, t.setIcon)(i, "trash"),
+          ((i.disabled = !0), (0, t.setIcon)(i, "trash"),
             (i.onclick = (t) =>
               e(this, void 0, void 0, function* () {
                 (t.stopPropagation(),
@@ -36841,8 +36225,15 @@
       openLocalFile(r) {
         return e(this, void 0, void 0, function* () {
           const e = this.getOpenableLocalFile(r);
-          if (!(null == e ? void 0 : e.file))
-            return void new t.Notice("该书暂无本地文件");
+          if (!(null == e ? void 0 : e.file)) {
+            const file = yield this.plugin.openOrCreateBookNote(r);
+            if (file) {
+              r.localFile = { file, bookId: r.bookId, title: r.title };
+              r.hasLocalFile = !0;
+              this.renderBooks();
+            }
+            return;
+          }
           const n = this.app.workspace.getLeaf(!0);
           (yield n.openFile(e.file),
             this.app.workspace.revealLeaf(n));
@@ -37699,15 +37090,7 @@
       });
     }
     function wt(t, r) {
-      return e(this, void 0, void 0, function* () {
-        try {
-          (yield t.adapter.exists(mt)) || (yield t.adapter.mkdir(mt));
-          const e = JSON.stringify(r);
-          yield t.adapter.write(vt, e);
-        } catch (e) {
-          console.error("[weread] Failed to save daily stats cache", e);
-        }
-      });
+      return Promise.resolve();
     }
     class yt extends t.Modal {
       onOpen() {
@@ -37742,7 +37125,8 @@
         const o = r.createDiv({ cls: "weread-export-actions" }),
           a = o.createEl("button", { cls: "weread-export-action-btn mod-cta" });
         ((0, t.setIcon)(a.createSpan(), "vault"),
-          a.createSpan({ text: "保存到 Vault" }),
+          a.createSpan({ text: "保存到 Vault（只读模式已禁用）" }),
+          (a.disabled = !0),
           a.addEventListener("click", () =>
             e(this, void 0, void 0, function* () {
               try {
@@ -37752,7 +37136,7 @@
                     (l(f).noteLocation || "/").replace(/\/$/, "") +
                     "/" +
                     this.filename;
-                (yield this.vault.adapter.writeBinary(n, r.buffer),
+                (yield wereadRejectVaultWrite(n, r.buffer),
                   new t.Notice(`✅ 已保存到 Vault：${n}`),
                   this.close());
               } catch (e) {
@@ -37762,13 +37146,10 @@
           ));
         const s = o.createEl("button", { cls: "weread-export-action-btn" });
         ((0, t.setIcon)(s.createSpan(), "download"),
-          s.createSpan({ text: "保存到本地" }),
+          s.createSpan({ text: "保存到本地（只读模式已禁用）" }),
+          (s.disabled = !0),
           s.addEventListener("click", () => {
-            const e = activeDocument.createElement("a");
-            ((e.download = this.filename),
-              (e.href = this.dataUrl),
-              e.click(),
-              this.close());
+            return wereadReadOnlyNotice();
           }));
         const c = o.createEl("button", { cls: "weread-export-action-btn" });
         ((0, t.setIcon)(c.createSpan(), "copy"),
@@ -39625,14 +39006,11 @@
         });
         (i.setCssStyles({ marginLeft: "4px" }),
           (0, t.setIcon)(i, "refresh-ccw"),
-          i.setAttr("title", "刷新数据并同步本地笔记"),
+          i.setAttr("title", "刷新书籍数据（只读）"),
           i.addEventListener("click", () =>
             e(this, void 0, void 0, function* () {
               (i.addClass("is-spinning"),
-                yield Promise.all([
-                  this.loadAllData(),
-                  this.plugin.syncBookById(this.bookId),
-                ]),
+                yield this.loadAllData(),
                 i.removeClass("is-spinning"),
                 this.render());
             }),
@@ -40652,37 +40030,7 @@
         for (const t of this.saveButtons) t.disabled = e;
       }
       saveNote(r) {
-        return e(this, void 0, void 0, function* () {
-          var e;
-          const n = this.getSelectedBook();
-          if (n)
-            if (this.noteTitle.trim()) {
-              this.setBusy(!0);
-              try {
-                const i = (0, t.normalizePath)(
-                  `${l(f).noteLocation}/读书笔记/${w(n.title)}`,
-                );
-                yield this.ensureFolder(i);
-                const o = yield this.getAvailableFilePath(i, this.noteTitle),
-                  a = yield this.saveImportedImages(i),
-                  s = this.buildNoteContent(n, a),
-                  c = yield this.app.vault.create(o, s);
-                (yield null === (e = this.onSaved) || void 0 === e
-                  ? void 0
-                  : e.call(this, c),
-                  new t.Notice(`已保存《${n.title}》的读书笔记`),
-                  this.close(),
-                  r && (yield this.openFile(c)));
-              } catch (e) {
-                (console.error("[weread plugin] 保存读书笔记失败", e),
-                  new t.Notice(
-                    `保存读书笔记失败：${e instanceof Error ? e.message : "未知错误"}`,
-                  ),
-                  this.setBusy(!1));
-              }
-            } else new t.Notice("请输入笔记标题");
-          else new t.Notice("请先选择关联书籍");
-        });
+        return wereadReadOnlyNotice();
       }
       buildNoteContent(e, r) {
         var n, i, o;
@@ -40834,35 +40182,7 @@
         });
       }
       saveImportedImages(r) {
-        return e(this, void 0, void 0, function* () {
-          var e, n;
-          if (!this.importedNote || 0 === this.importedNote.images.length)
-            return [];
-          const i = (0, t.normalizePath)(`${r}/附件`);
-          yield this.ensureFolder(i);
-          const o = (0, t.moment)().format("YYYY-MM-DD-HHmmss"),
-            a = [];
-          for (let t = 0; t < this.importedNote.images.length; t += 1) {
-            const r = this.importedNote.images[t],
-              s =
-                null !==
-                  (n =
-                    null === (e = r.name.match(/\.[a-zA-Z0-9]+$/)) ||
-                    void 0 === e
-                      ? void 0
-                      : e[0]) && void 0 !== n
-                  ? n
-                  : ".png",
-              l = r.name.replace(/\.[^.]+$/, ""),
-              c = w(l) || `图片-${t + 1}`,
-              d = yield this.getAvailableAssetPath(i, `${o}-${c}`, s);
-            (yield this.app.vault.createBinary(d, r.data),
-              a.push(
-                `![[${d}|${this.importedNote.sourceName} 原图 ${t + 1}]]`,
-              ));
-          }
-          return a;
-        });
+        return Promise.resolve().then(wereadRejectVaultWrite);
       }
       getAvailableAssetPath(r, n, i) {
         return e(this, void 0, void 0, function* () {
@@ -40875,14 +40195,7 @@
         });
       }
       ensureFolder(r) {
-        return e(this, void 0, void 0, function* () {
-          const e = (0, t.normalizePath)(r).split("/").filter(Boolean);
-          let n = "";
-          for (const t of e)
-            ((n = n ? `${n}/${t}` : t),
-              (yield this.app.vault.adapter.exists(n)) ||
-                (yield this.app.vault.createFolder(n)));
-        });
+        return Promise.resolve().then(wereadRejectVaultWrite);
       }
       getAvailableFilePath(r, n) {
         return e(this, void 0, void 0, function* () {
@@ -41081,24 +40394,10 @@
             }, 50));
       }
       openBookListImport(e) {
-        new Bt(this.app, this.apiRouter, this.syncNotebooks, e).open();
+        return wereadReadOnlyNotice();
       }
       openReadingNote(r, n, i) {
-        return e(this, void 0, void 0, function* () {
-          try {
-            const e =
-              null != n ? n : yield this.bookshelfService.getBookshelfBooks();
-            if (0 === e.length)
-              return void new t.Notice("微信读书书架中暂无可关联的书籍");
-            const o = [...e].sort((e, t) =>
-              e.title.localeCompare(t.title, "zh-CN"),
-            );
-            new zt(this.app, o, r, i).open();
-          } catch (e) {
-            (console.error("[weread plugin] 打开读书笔记窗口失败", e),
-              new t.Notice("读取微信读书书架失败，请稍后重试"));
-          }
-        });
+        return wereadReadOnlyNotice();
       }
       getPreferredReadingOpenMode() {
         var e;
@@ -41110,55 +40409,27 @@
         });
       }
       startSync() {
-        return e(this, arguments, void 0, function* (e = !1, r) {
-          if (this.syncing) new t.Notice("正在同步微信读书笔记，请勿重复点击");
-          else {
-            this.syncing = !0;
-            try {
-              const t = yield this.syncNotebooks.syncNotebooks(
-                  e,
-                  window.moment().format("YYYY-MM-DD"),
-                  r,
-                ),
-                n = l(f).lastSyncBookTitles || [];
-              return (f.actions.updateLastSyncInfo(t || 0, n), t);
-            } catch (e) {
-              (t.Platform.isDesktopApp
-                ? new t.Notice("同步微信读书笔记异常,请打开控制台查看详情")
-                : new t.Notice(
-                    "同步微信读书笔记异常,请使用电脑端打开控制台查看详情" + e,
-                  ),
-                console.error("同步微信读书笔记异常", e));
-            } finally {
-              this.syncing = !1;
-            }
-          }
-        });
+        return wereadReadOnlyNotice();
       }
       syncBookById(r) {
+        return wereadReadOnlyNotice();
+      }
+      openOrCreateBookNote(book) {
         return e(this, void 0, void 0, function* () {
-          if (this.syncing) new t.Notice("正在同步微信读书笔记，请稍后再试");
-          else {
-            this.syncing = !0;
-            try {
-              yield this.syncNotebooks.syncBookById(r);
-            } catch (e) {
-              (new t.Notice("同步当前书籍异常,请打开控制台查看详情"),
-                console.error("同步当前书籍异常", e));
-            } finally {
-              this.syncing = !1;
-            }
+          try {
+            const file = yield this.fileManager.getOrCreateLinkedNote(book);
+            const leaf = this.app.workspace.getLeaf(!0);
+            yield leaf.openFile(file);
+            this.app.workspace.revealLeaf(leaf);
+            return file;
+          } catch (error) {
+            new t.Notice(`无法打开或创建笔记：${error.message}`);
+            return null;
           }
         });
       }
       deleteLocalBookByPath(r) {
-        return e(this, void 0, void 0, function* () {
-          const e = this.app.vault.getAbstractFileByPath(r);
-          e instanceof t.TFile
-            ? (yield this.fileManager.deleteNotebookFile(e),
-              new t.Notice("本地文件已删除"))
-            : new t.Notice("未找到本地文件");
-        });
+        return wereadReadOnlyNotice();
       }
       activateReadingView(t, r) {
         return e(this, void 0, void 0, function* () {
@@ -41308,27 +40579,6 @@
       }
       setupScheduledSync() {
         this.clearScheduledSyncTimer();
-        const { scheduledSyncToggle: r, scheduledSyncInterval: n } = l(f);
-        if (!r) return;
-        const i = 60 * Math.max(1, n) * 1e3;
-        this.scheduledSyncTimer = window.setInterval(
-          () =>
-            e(this, void 0, void 0, function* () {
-              try {
-                const e = yield this.syncNotebooks.syncNotebooks(
-                    !1,
-                    window.moment().format("YYYY-MM-DD"),
-                  ),
-                  r = l(f).lastSyncBookTitles || [];
-                (f.actions.updateLastSyncInfo(e || 0, r),
-                  new t.Notice(`定时同步完成，共同步 ${e || 0} 本书`));
-              } catch (e) {
-                (console.error("[weread plugin] 定时同步失败", e),
-                  new t.Notice("定时同步失败，请查看控制台"));
-              }
-            }),
-          i,
-        );
       }
       clearScheduledSyncTimer() {
         null !== this.scheduledSyncTimer &&
