@@ -33827,7 +33827,6 @@
       display() {
         const { containerEl: e } = this;
         e.empty();
-        e.createEl("p", { text: "笔记保护：已有笔记只打开，没有笔记才创建；同步和覆盖已禁用。" });
         this.showApiKeySetting();
         this.notebookFolder();
         this.bookshelfSettings();
@@ -35516,7 +35515,7 @@
         return e(this, void 0, void 0, function* () {
           (this.contentEl.empty(),
             this.contentEl.addClass("weread-bookshelf-view"));
-          this.contentEl.createDiv({ cls: "weread-readonly-notice", text: "笔记保护 · 已有只打开，没有才创建" });
+          this.contentEl.createDiv({ cls: "weread-readonly-notice" });
           const r = this.contentEl.createDiv({
               cls: "weread-bookshelf-toolbar",
             }),
